@@ -7,35 +7,19 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 public class MainTest {
     private static WebDriver driver;
-    private static String username;
-    private static String password;
 
     @BeforeClass
     public static void setup() throws MalformedURLException {
-//        System.setProperty("webdriver.chrome.driver", "/Users/Vaio/Downloads/chromedriver.exe");
-
-        Properties properties = new Properties();
-        try (FileInputStream fis = new FileInputStream("src/main/resources/config.properties")){
-            properties.load(fis);
-            username = properties.getProperty("username");
-            password = properties.getProperty("password");
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
-        }
 
         // 1. Define desired capabilities
         DesiredCapabilities cap = new DesiredCapabilities();
@@ -48,8 +32,6 @@ public class MainTest {
         String hubUrl = "http://192.168.1.67:4444/wd/hub";
         driver = new RemoteWebDriver(new URL(hubUrl), options);
 
-//        System.setProperty("webdriver.chrome.driver", "./Driver/chromedriver.exe");
-//        driver = new ChromeDriver();
         // 4. Set request URL
         driver.get("https://passport.yandex.ru");
         driver.manage().window().maximize();
@@ -62,26 +44,13 @@ public class MainTest {
         System.out.println(driver.getTitle());
         Assert.assertTrue(title.equals("Авторизация"));
 
-        driver.findElement(By.xpath("//*[@id=\'passp-field-login\']")).sendKeys(username);
-        driver.findElement(By.xpath("//*[@id=\'root\']/div/div[2]/div[2]/div/div/div[2]/div[3]/div/div/div/div[1]/form/div[3]/button")).click();
-        driver.findElement(By.xpath("//*[@id=\'passp-field-passwd\']")).sendKeys(password);
-        driver.findElement(By.xpath("//*[@id=\'root\']/div/div[2]/div[2]/div/div/div[2]/div[3]/div/div/div/form/div[3]/button")).click();
-
-        driver.findElement(By.xpath("//*[@id=\'root\']/div/div[2]/div[1]/div/div/div/a[1]/span[1]")).click();
-        driver.findElement(By.xpath("//*[@id=\'root\']/div/div[2]/div[1]/div/div/div/div/ul/ul/li[1]/a/span")).click();
+        RegistrationPage registrationPage = new RegistrationPage(driver);
+        registrationPage.login();
 
         int size = driver.findElements(By.partialLinkText("Simbirsoft Тестовое задание")).size();
         Assert.assertEquals(2, size);
 
-        driver.findElement(By.xpath("//*[@id=\'nb-1\']/body/div[2]/div[8]/div/div[3]/div[2]/div[2]/div/div/a/span")).click();
-        driver.findElement(By.xpath("//*[@id=\'nb-1\']/body/div[2]/div[11]/div/div/div[2]/div/div[2]/div/div[1]/div[1]/div[1]/div/div[1]/div[1]/div[1]/div/div/div/div/div")).sendKeys("airizzio@yandex.ru");
-        driver.findElement(By.xpath("//*[@id=\'nb-1\']/body/div[2]/div[11]/div/div/div[2]/div/div[2]/div/div[1]/div[1]/div[1]/div/div[1]/div[1]/div[3]/div/div/input")).sendKeys("Simbirsoft Тестовое задание. Хайруллин");
-        driver.findElement(By.xpath("//*[@id=\'cke_1_contents\']/div")).sendKeys(String.valueOf(size));
-
-        WebElement element = driver.findElement(By.xpath("//*[@id=\'nb-1\']/body/div[2]/div[11]/div/div/div[2]/div/div[2]/div/div[1]/div[1]/div[2]/div/div[1]/div[1]/button"));
-        Assert.assertNotNull(element);
-
-        element.click();
+        registrationPage.sendEmail(size);
     }
 
     @AfterClass
