@@ -77,7 +77,8 @@ public class MainTest {
     }
 
 }
-
+//HUB console
 //java -jar selenium-server-standalone-3.141.59.jar -role hub
 
+//Node console
 //java -Dwebdriver.chrome.driver="C:/Users/Vaio/Downloads/chromedriver.exe" -jar selenium-server-standalone-3.141.59.jar -role node -hub http://192.168.1.67:4444/grid/register
