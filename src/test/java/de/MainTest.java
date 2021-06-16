@@ -17,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 public class MainTest {
     private static WebDriver driver;
+    private static final String SITE_URL = "https://passport.yandex.ru";
 
     @BeforeClass
     public static void setup() throws MalformedURLException {
@@ -33,7 +34,7 @@ public class MainTest {
         driver = new RemoteWebDriver(new URL(hubUrl), options);
 
         // 4. Set request URL
-        driver.get("https://passport.yandex.ru");
+        driver.get(SITE_URL);
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
     }
@@ -45,6 +46,7 @@ public class MainTest {
         Assert.assertTrue(title.equals("Авторизация"));
 
         RegistrationPage registrationPage = new RegistrationPage(driver);
+        Assert.assertNotNull(registrationPage);
         registrationPage.login();
 
         int size = driver.findElements(By.partialLinkText("Simbirsoft Тестовое задание")).size();

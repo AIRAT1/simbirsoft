@@ -11,11 +11,9 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class RegistrationPage {
-    private final String URL_MATCH = "https://passport.yandex.ru";
     private String username;
     private String password;
     private String mailAddress;
-    private WebDriver driver;
 
     @FindBy(xpath = "//*[@id=\'passp-field-login\']")
     @CacheLookup
@@ -63,10 +61,20 @@ public class RegistrationPage {
 
     public RegistrationPage(WebDriver driver) {
         PageFactory.initElements(driver, this);
-        this.driver = driver;
     }
 
     public void login() {
+        setupProperties();
+
+        loginField.sendKeys(username);
+        loginButton.click();
+        passwordField.sendKeys(password);
+        passwordButton.click();
+        userButton.click();
+        postButton.click();
+    }
+
+    private void setupProperties() {
         Properties properties = new Properties();
         try (FileInputStream fis = new FileInputStream("src/main/resources/config.properties")){
             properties.load(fis);
@@ -76,13 +84,6 @@ public class RegistrationPage {
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
-
-        loginField.sendKeys(username);
-        loginButton.click();
-        passwordField.sendKeys(password);
-        passwordButton.click();
-        userButton.click();
-        postButton.click();
     }
 
     public void sendEmail(int size) {
