@@ -8,21 +8,34 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 public class MainTest {
     private static WebDriver driver;
+    private static String username;
+    private static String password;
 
     @BeforeClass
     public static void setup() throws MalformedURLException {
 //        System.setProperty("webdriver.chrome.driver", "/Users/Vaio/Downloads/chromedriver.exe");
+
+        Properties properties = new Properties();
+        try (FileInputStream fis = new FileInputStream("src/main/resources/config.properties")){
+            properties.load(fis);
+            username = properties.getProperty("username");
+            password = properties.getProperty("password");
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
 
         // 1. Define desired capabilities
         DesiredCapabilities cap = new DesiredCapabilities();
@@ -49,9 +62,9 @@ public class MainTest {
         System.out.println(driver.getTitle());
         Assert.assertTrue(title.equals("Авторизация"));
 
-        driver.findElement(By.xpath("//*[@id=\'passp-field-login\']")).sendKeys("AIRIZZIO");
+        driver.findElement(By.xpath("//*[@id=\'passp-field-login\']")).sendKeys(username);
         driver.findElement(By.xpath("//*[@id=\'root\']/div/div[2]/div[2]/div/div/div[2]/div[3]/div/div/div/div[1]/form/div[3]/button")).click();
-        driver.findElement(By.xpath("//*[@id=\'passp-field-passwd\']")).sendKeys("Diana2013");
+        driver.findElement(By.xpath("//*[@id=\'passp-field-passwd\']")).sendKeys(password);
         driver.findElement(By.xpath("//*[@id=\'root\']/div/div[2]/div[2]/div/div/div[2]/div[3]/div/div/div/form/div[3]/button")).click();
 
         driver.findElement(By.xpath("//*[@id=\'root\']/div/div[2]/div[1]/div/div/div/a[1]/span[1]")).click();
@@ -73,7 +86,7 @@ public class MainTest {
 
     @AfterClass
     public static void burnDown() {
-        driver.quit();
+//        driver.quit();
     }
 
 }
