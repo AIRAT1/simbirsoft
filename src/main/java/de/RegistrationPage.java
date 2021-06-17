@@ -72,7 +72,7 @@ public class RegistrationPage {
         int size = driver.findElements(By.partialLinkText(readProperties.getSubjectOfLetter())).size();
         newMailButton.click();
         mailAddressField.sendKeys(readProperties.getMailAddress());
-        mailThemeField.sendKeys(readProperties.getSubjectOfLetter() + ". Хайруллин");
+        mailThemeField.sendKeys( "Simbirsoft Тестовое задание. Хайруллин");
         mailTextField.sendKeys(String.valueOf(size));
         mailSendButton.click();
     }
