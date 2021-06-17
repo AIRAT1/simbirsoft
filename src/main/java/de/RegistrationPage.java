@@ -10,61 +10,56 @@ import org.openqa.selenium.support.PageFactory;
 public class RegistrationPage {
     private ReadProperties readProperties;
 
-    public RegistrationPage() {
-        this.readProperties = new ReadProperties();
-    }
-
-    @FindBy(xpath = "//*[@id=\'passp-field-login\']")
+    @FindBy(id = "passp-field-login")
     @CacheLookup
     private WebElement loginField;
 
-    @FindBy(xpath = "//*[@id=\'root\']/div/div[2]/div[2]/div/div/div[2]/div[3]/div/div/div/div[1]/form/div[3]/button")
+    @FindBy(className = "passp-sign-in-button")
     @CacheLookup
     private WebElement loginButton;
 
-    @FindBy(xpath = "//*[@id=\'passp-field-passwd\']")
+    @FindBy(id = "passp-field-passwd")
     @CacheLookup
     private WebElement passwordField;
 
-    @FindBy(xpath = "//*[@id=\'root\']/div/div[2]/div[2]/div/div/div[2]/div[3]/div/div/div/form/div[3]/button")
+    @FindBy(className = "passp-sign-in-button")
     @CacheLookup
     private WebElement passwordButton;
 
-    @FindBy(xpath = "//*[@id=\'root\']/div/div[2]/div[1]/div/div/div/a[1]/span[1]")
+    @FindBy(className = "user-account__name")
     @CacheLookup
     private WebElement userButton;
 
-    @FindBy(xpath = "//*[@id=\'root\']/div/div[2]/div[1]/div/div/div/div/ul/ul/li[1]/a/span")
+    @FindBy(className = "menu__text")
     @CacheLookup
     private WebElement postButton;
 
-    @FindBy(xpath = "//*[@id=\'nb-1\']/body/div[2]/div[8]/div/div[3]/div[2]/div[2]/div/div/a/span")
+    @FindBy(className = "mail-ComposeButton-Text")
     @CacheLookup
     private WebElement newMailButton;
 
-    @FindBy(xpath = "//*[@id=\'nb-1\']/body/div[2]/div[11]/div/div/div[2]/div/div[2]/div/div[1]/div[1]/div[1]/div/div[1]/div[1]/div[1]/div/div/div/div/div")
+    @FindBy(className = "composeYabbles")
     @CacheLookup
     private WebElement mailAddressField;
 
-    @FindBy(xpath = "//*[@id=\'nb-1\']/body/div[2]/div[11]/div/div/div[2]/div/div[2]/div/div[1]/div[1]/div[1]/div/div[1]/div[1]/div[3]/div/div/input")
+    @FindBy(className = "composeTextField")
     @CacheLookup
     private WebElement mailThemeField;
 
-    @FindBy(xpath = "//*[@id=\'cke_1_contents\']/div")
+    @FindBy(className = "cke_wysiwyg_div")
     @CacheLookup
     private WebElement mailTextField;
 
-    @FindBy(xpath = "//*[@id=\'nb-1\']/body/div[2]/div[11]/div/div/div[2]/div/div[2]/div/div[1]/div[1]/div[2]/div/div[1]/div[1]/button")
+    @FindBy(className = "ComposeControlPanelButton-Button")
     @CacheLookup
     private WebElement mailSendButton;
 
     public RegistrationPage(WebDriver driver) {
         PageFactory.initElements(driver, this);
+        readProperties = new ReadProperties();
     }
 
     public void login() {
-        readProperties = new ReadProperties();
-
         loginField.sendKeys(readProperties.getUsername());
         loginButton.click();
         passwordField.sendKeys(readProperties.getPassword());
@@ -74,10 +69,10 @@ public class RegistrationPage {
     }
 
     public void sendEmail(WebDriver driver) {
-        int size = driver.findElements(By.partialLinkText("Simbirsoft Тестовое задание")).size();
+        int size = driver.findElements(By.partialLinkText(readProperties.getSubjectOfLetter())).size();
         newMailButton.click();
         mailAddressField.sendKeys(readProperties.getMailAddress());
-        mailThemeField.sendKeys("Simbirsoft Тестовое задание. Хайруллин");
+        mailThemeField.sendKeys(readProperties.getSubjectOfLetter() + ". Хайруллин");
         mailTextField.sendKeys(String.valueOf(size));
         mailSendButton.click();
     }

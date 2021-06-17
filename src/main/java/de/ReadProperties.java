@@ -9,6 +9,7 @@ public class ReadProperties {
     private final String password;
     private final String mailAddress;
     private final String hubUrl;
+    private final String subjectOfLetter;
 
     public ReadProperties() {
         Properties properties = new Properties();
@@ -18,6 +19,7 @@ public class ReadProperties {
             password = properties.getProperty("password");
             mailAddress = properties.getProperty("mailAddress");
             hubUrl = properties.getProperty("hubUrl");
+            subjectOfLetter = properties.getProperty("subjectOfLetter");
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -37,5 +39,9 @@ public class ReadProperties {
 
     public String getHubUrl() {
         return hubUrl;
+    }
+
+    public String getSubjectOfLetter() {
+        return subjectOfLetter;
     }
 }
