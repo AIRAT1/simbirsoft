@@ -4,7 +4,6 @@ import io.qameta.allure.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -20,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class MainTest {
     private static WebDriver driver;
     private static final String SITE_URL = "https://passport.yandex.ru";
+    private ReadProperties readProperties = new ReadProperties();
 
     @BeforeEach
     public void setup() throws MalformedURLException {
@@ -31,9 +31,8 @@ public class MainTest {
         // 2. Chrome options definition
         ChromeOptions options = new ChromeOptions();
         options.merge(cap);
-//        options.setHeadless(true);
         // 3. Set driver & hubUrl
-        String hubUrl = "http://192.168.1.67:4444/wd/hub";
+        String hubUrl = readProperties.getHubUrl();
         driver = new RemoteWebDriver(new URL(hubUrl), options);
 
         // 4. Set request URL
@@ -51,29 +50,12 @@ public class MainTest {
     public void mainTest() {
         RegistrationPage registrationPage = new RegistrationPage(driver);
         assertNotNull(registrationPage);
-        login(registrationPage);
-        int size = driver.findElements(By.partialLinkText("Simbirsoft Тестовое задание")).size();
-        sendEmail(registrationPage, size);
-    }
-
-    @Step(value = "Login")
-    private void login(RegistrationPage registrationPage) {
         registrationPage.login();
-    }
-
-    @Step(value = "Send email with {1}")
-    private void sendEmail(RegistrationPage registrationPage, int size) {
-        registrationPage.sendEmail(size);
+        registrationPage.sendEmail(driver);
     }
 
     @AfterEach
     public void burnDown() {
-//        driver.quit();
+        driver.quit();
     }
-
 }
-//HUB console
-//java -jar selenium-server-standalone-3.141.59.jar -role hub
-
-//Node console
-//java -Dwebdriver.chrome.driver="C:/Users/Vaio/Downloads/chromedriver.exe" -jar selenium-server-standalone-3.141.59.jar -role node -hub http://192.168.1.67:4444/grid/register

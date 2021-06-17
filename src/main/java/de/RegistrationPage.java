@@ -1,19 +1,18 @@
 package de;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.CacheLookup;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
-
 public class RegistrationPage {
-    private String username;
-    private String password;
-    private String mailAddress;
+    private ReadProperties readProperties;
+
+    public RegistrationPage() {
+        this.readProperties = new ReadProperties();
+    }
 
     @FindBy(xpath = "//*[@id=\'passp-field-login\']")
     @CacheLookup
@@ -64,31 +63,20 @@ public class RegistrationPage {
     }
 
     public void login() {
-        setupProperties();
+        readProperties = new ReadProperties();
 
-        loginField.sendKeys(username);
+        loginField.sendKeys(readProperties.getUsername());
         loginButton.click();
-        passwordField.sendKeys(password);
+        passwordField.sendKeys(readProperties.getPassword());
         passwordButton.click();
         userButton.click();
         postButton.click();
     }
 
-    private void setupProperties() {
-        Properties properties = new Properties();
-        try (FileInputStream fis = new FileInputStream("src/main/resources/config.properties")){
-            properties.load(fis);
-            username = properties.getProperty("username");
-            password = properties.getProperty("password");
-            mailAddress = properties.getProperty("mailAddress");
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
-        }
-    }
-
-    public void sendEmail(int size) {
+    public void sendEmail(WebDriver driver) {
+        int size = driver.findElements(By.partialLinkText("Simbirsoft Тестовое задание")).size();
         newMailButton.click();
-        mailAddressField.sendKeys(mailAddress);
+        mailAddressField.sendKeys(readProperties.getMailAddress());
         mailThemeField.sendKeys("Simbirsoft Тестовое задание. Хайруллин");
         mailTextField.sendKeys(String.valueOf(size));
         mailSendButton.click();
