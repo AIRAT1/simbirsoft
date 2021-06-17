@@ -1,5 +1,6 @@
 package de;
 
+import io.qameta.allure.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,17 +42,27 @@ public class MainTest {
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
     }
 
+    @Epic("TESTING FOR https://passport.yandex.ru tasks")
+    @Feature(value = "Test for task registration page is not null")
+    @Severity(SeverityLevel.BLOCKER)
+    @Description("In this test we will login with correct credentials.")
+    @Story(value = "Test for login with correct credentials")
     @Test
     public void mainTest() {
-        String title = driver.getTitle();
-        System.out.println(driver.getTitle());
-
         RegistrationPage registrationPage = new RegistrationPage(driver);
         assertNotNull(registrationPage);
-        registrationPage.login();
-
+        login(registrationPage);
         int size = driver.findElements(By.partialLinkText("Simbirsoft Тестовое задание")).size();
+        sendEmail(registrationPage, size);
+    }
 
+    @Step(value = "Login")
+    private void login(RegistrationPage registrationPage) {
+        registrationPage.login();
+    }
+
+    @Step(value = "Send email with {1}")
+    private void sendEmail(RegistrationPage registrationPage, int size) {
         registrationPage.sendEmail(size);
     }
 
