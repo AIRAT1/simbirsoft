@@ -23,19 +23,13 @@ public class MainTest {
 
     @BeforeEach
     public void setup() throws MalformedURLException {
-
-        // 1. Define desired capabilities
         DesiredCapabilities cap = new DesiredCapabilities();
         cap.setBrowserName("chrome");
         cap.setPlatform(Platform.WINDOWS);
-        // 2. Chrome options definition
         ChromeOptions options = new ChromeOptions();
         options.merge(cap);
-        // 3. Set driver & hubUrl
         String hubUrl = readProperties.getHubUrl();
         driver = new RemoteWebDriver(new URL(hubUrl), options);
-
-        // 4. Set request URL
         driver.get(SITE_URL);
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
