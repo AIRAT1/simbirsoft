@@ -56,6 +56,6 @@ public class MainTest {
 
     @AfterEach
     public void burnDown() {
-//        driver.quit();
+        driver.quit();
     }
 }
